@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/goit-re-hw-04-imageList/static/css/main.0d376a36.css",
+    "main.js": "/goit-re-hw-04-imageList/static/js/main.ccbd0377.js",
+    "index.html": "/goit-re-hw-04-imageList/index.html",
+    "main.0d376a36.css.map": "/goit-re-hw-04-imageList/static/css/main.0d376a36.css.map",
+    "main.ccbd0377.js.map": "/goit-re-hw-04-imageList/static/js/main.ccbd0377.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0d376a36.css",
+    "static/js/main.ccbd0377.js"
+  ]
+}
