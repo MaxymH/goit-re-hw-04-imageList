@@ -1,9 +1,9 @@
 import s from './imageGalleryItem.module.css'
 import PropTypes from 'prop-types';
 
-const ImageGalleryItem = ({ url, tags, id  }) => {
+const ImageGalleryItem = ({ onClick,url, tags, id  }) => {
     return (
-        <li className={s.item}>
+        <li onClick={onClick} className={s.item}>
             <img id={id} src={url} alt={tags} className={s.image} />
         </li>
     )

@@ -3,11 +3,8 @@ import PropTypes from 'prop-types';
 
 
 const Button = ({func}) => {
-   const onClick = () => {
-            func('s')
-        }
     return (
-        <button onClick={() => onClick()} className={s.button}>Load more</button>
+        <button onClick={func} className={s.button}>Load more</button>
     )
 }
 

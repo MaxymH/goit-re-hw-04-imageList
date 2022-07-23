@@ -5,9 +5,12 @@ import Searchbar from "components/Searchbar";
 import { Oval } from 'react-loader-spinner'
   import { ToastContainer, toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
-
+import { query } from "components/Api/pixabay";
 
 const { Component } = require("react");
+
+
+
 
 
 export default class SearchImage extends Component  {
@@ -22,36 +25,34 @@ export default class SearchImage extends Component  {
         modalUrl: [],
     }
     
-    componentDidUpdate(prevProp, prevState) {   
-        const { name, page } = this.state
-        
+
+    async componentDidUpdate(prevProp, prevState) {
+    const { name, page} = this.state;
+    
         if (name !== prevState.name || page > prevState.page) {
             this.setState({ loader: 'loading' })
-            
-            setTimeout(() => {
-            fetch(`https://pixabay.com/api/?q=${name}&page=${page}&key=28563998-94f39fcb3f5d6102eda4d8ddd&image_type=photo&orientation=horizontal&per_page=10`)
-            .then(data => data.json())
-            .then(hits => this.setState({
-                totalHits: hits.totalHits,
-                urlImage: [...this.state.urlImage, ...hits.hits],
-            }))
-            .catch(error => this.setState({error: error.message}))
-            .finally(this.setState({ loader: 'load' }))
-        }, 1000);
-        }
-        
+    
+            const { totalHits, hits } = await query(name, page);
+      
 
-        if (this.state.totalHits === 0) {
+            try {
+                this.setState(prevPage =>({
+                    totalHits: totalHits,
+                    urlImage: [...prevPage.urlImage, ...hits],
+                }))
+
+                if (totalHits === 0) {
             toast.error("No result!", {
                 autoClose: 2000
-            })
+                })
+            }
+            } catch (error) {
+                this.setState({ error: error.message });
+            } finally {
+                this.setState({ loader: 'load' })     
+            }
         }
         
-        if (this.state.error !== '') {
-            toast.error(`${this.state.error}`, {
-                autoClose: 2000
-            })
-        }
     }
 
     onSubmit = (data) => {
@@ -78,13 +79,14 @@ export default class SearchImage extends Component  {
     } 
 
     onClickGalleryItem = (id) => {
-        fetch(`https://pixabay.com/api/?key=28563998-94f39fcb3f5d6102eda4d8ddd&id=${id}`)
-            .then(data => data.json())
-            .then(data => this.setState({
-                modalUrl: data.hits,
+        const urlImage = this.state.urlImage
+        const filter = urlImage.filter(f => f.id === Number(id))
+        if (filter) {
+            this.setState({
+                modalUrl: filter[0],
                 modal: true,
-            }))
-        
+            })
+        }
     }
 
     closeModal = () => {
@@ -98,16 +100,19 @@ export default class SearchImage extends Component  {
 
     render() {
         const { onSubmit, onClickGalleryItem, onClickLoadMore, closeModal } = this
-        const {loader, urlImage, totalHits, modal, modalUrl } = this.state
+        const {loader, urlImage, totalHits, modal } = this.state
         return (
             <>
                 <Searchbar onSubmit={onSubmit} />
-                <ImageGallery onClickGalleryItem={onClickGalleryItem} url={urlImage} />
+                <ImageGallery onClickGalleryItem={onClickGalleryItem} image={urlImage} />
                 {loader === 'loading' &&
                     <Oval color="#00BFFF" height={80} width={80} />}
                 {totalHits > 10 && <Button func={onClickLoadMore} />}
             
-                {modal && <Modal closeModal={closeModal} url={modalUrl} />}
+                {modal &&
+                    <Modal closeModal={closeModal}>
+                    <img src={this.state.modalUrl.largeImageURL} alt={this.state.modalUrl.tags} />
+                </Modal>}
                 <ToastContainer />
                 
         </>

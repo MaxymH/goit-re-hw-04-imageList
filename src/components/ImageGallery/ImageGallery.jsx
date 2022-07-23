@@ -2,29 +2,37 @@ import ImageGalleryItem from "./ImageGalleryItem"
 import s from './imageGallery.module.css'
 import PropTypes from 'prop-types';
 
-const ImageGallery = ({ url , onClickGalleryItem}) => {
-    if (!url) {
+const ImageGallery = ({ image , onClickGalleryItem}) => {
+    if (!image) {
         return
     }
-    const element = url.map(res => {
+    const onClick = (e) => {
+        onClickGalleryItem(e.target.id)
+    }
+    const element = image.map(res => {
         return (
-            <ImageGalleryItem id={res.id} key={res.id} url={res.webformatURL} tags={res.tags} />
+            <ImageGalleryItem onClick={onClick} id={res.id} key={res.id} url={res.webformatURL} tags={res.tags} />
         )
         
     })
 
-    const onClick = (e) => {
-        onClickGalleryItem(e.target.id)
-    }
+    
     return (
-        <ul onClick={onClick} className={s.gallery}>
+        <ul  className={s.gallery}>
             {element}
         </ul>
     )
 }
 
 ImageGallery.propTypes = {
-    url: PropTypes.array.isRequired,
+    image: PropTypes.arrayOf(
+    PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        webformatURL: PropTypes.string.isRequired,
+        largeImageURL: PropTypes.string.isRequired,
+        tags: PropTypes.string.isRequired,
+    })
+    ).isRequired,
     onClickGalleryItem: PropTypes.func.isRequired,
 }
 
