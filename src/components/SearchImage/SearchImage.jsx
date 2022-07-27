@@ -27,7 +27,6 @@ const SearchImage = () => {
     const [page, setPage] = useState(1)
     
     useEffect(() => {
-        
         const fetch = async () => {
             if (!name) {
                 return
@@ -46,7 +45,7 @@ const SearchImage = () => {
                     urlImage: [...prevPage.urlImage, ...hits],
                     totalHits: totalHits,
                 }))
-
+                
             
             } catch (error) {
                 setState(state => ({ ...state, loader: 'load', error: error.message }));
@@ -55,6 +54,7 @@ const SearchImage = () => {
         
             fetch()
         }, [name, page])
+        
 
     const onSubmit = (data) => {
         if (data === '') {
