@@ -11,7 +11,7 @@ import {  useEffect, useState } from 'react'
 
 const SearchImage = () => {
 
-     
+    
     const [state, setState] = useState({
     urlImage: [],
     loader: false,
@@ -33,11 +33,11 @@ const SearchImage = () => {
                 return
             }
 
-            setState({
+            setState(state => ({
                 ...state,
                 loader: 'loading',
                 error: '',
-            })
+            }))
             try {
                 const { totalHits, hits } = await query(name, page);
                 setState(prevPage => ({
@@ -46,21 +46,15 @@ const SearchImage = () => {
                     urlImage: [...prevPage.urlImage, ...hits],
                     totalHits: totalHits,
                 }))
-                
-                if (state.totalHits === 0) {
-                    toast.error("No result!", {
-                        autoClose: 2000
-                    })
-                }
 
             
             } catch (error) {
-                setState({ ...state, loader: 'load', error: error.message });
+                setState(state => ({ ...state, loader: 'load', error: error.message }));
             }
         }
         
             fetch()
-        },[name, page])
+        }, [name, page])
 
     const onSubmit = (data) => {
         if (data === '') {
