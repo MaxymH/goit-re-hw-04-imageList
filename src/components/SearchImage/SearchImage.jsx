@@ -60,7 +60,7 @@ const SearchImage = () => {
         }
         
             fetch()
-        },[name, state])
+        },[name, page])
 
     const onSubmit = (data) => {
         if (data === '') {
@@ -73,10 +73,6 @@ const SearchImage = () => {
         setState({
             urlImage: [], loader: false, error:"",totalHits:null,
         }) 
-    }
-
-    const onClickLoadMore = () => {
-        setPage(page + 1)
     }
 
     const onClickGalleryItem = (id) => {
@@ -114,7 +110,7 @@ const SearchImage = () => {
                     />}
             {state.totalHits > 10 &&
                 <Button
-                    func={onClickLoadMore}
+                func={() => { setPage(page + 1) }}
                 />}
             {
                 modal.modal
